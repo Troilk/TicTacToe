@@ -472,6 +472,8 @@ static class Utility
 		boxSize.y = boxSize.y * 0.5f + safeOffset.y;
 		return Physics2D.OverlapArea(boxCenter - boxSize, boxCenter + boxSize) != null;
 	}
+
+	#region Array Helpers
 	
 	public static bool ValidateArrayNotNull<T>(T[] arr, int expectedLength)
 	{
@@ -505,6 +507,20 @@ static class Utility
 
 		return result;
 	}
+
+	public static T[] Convert2DArrayTo1D<T>(T[,] values)
+	{
+		int rows = values.GetLength(0);
+		int cols = values.GetLength(1);
+		T[] result = new T[rows * cols];
+
+		for(int i = 0; i < result.Length; ++i)
+			result[i] = values[i / cols, i % cols];
+
+		return result;
+	}
+
+	#endregion
 
 	public static int GetHammingWeight(int value)
 	{
@@ -634,7 +650,7 @@ static class Utility
 		mr.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		mr.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
 		mr.receiveShadows = false;
-		mr.useLightProbes = false;
+		mr.lightProbeUsage = UnityEngine.Rendering.LightProbeUsage.Off;
 
 		// getting effect material
 		return mr.material;

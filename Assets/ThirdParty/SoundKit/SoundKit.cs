@@ -55,6 +55,8 @@ public class SoundKit : MonoBehaviour
 
 		for( int i = 0; i < initialCapacity; i++ )
 			_availableSounds.Push( new SKSound( this ) );
+
+		UnityEngine.SceneManagement.SceneManager.sceneLoaded += this.OnSceneWasLoaded;
 	}
 
 
@@ -64,7 +66,7 @@ public class SoundKit : MonoBehaviour
 	}
 
 
-	void OnLevelWasLoaded( int level )
+	void OnSceneWasLoaded(UnityEngine.SceneManagement.Scene scene, UnityEngine.SceneManagement.LoadSceneMode loadMode)
 	{
 		if( dontDestroyOnLoad && clearAllAudioClipsOnLevelLoad )
 		{
