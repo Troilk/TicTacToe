@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-public class PageMainMenuHandlers : UIPage, IPageMainMenuHandlers
+public class PageMainMenuView : UIPage, IPageMainMenuHandlers
 {
 	[SerializeField, NonNull] ToggleGroup toggleGroupDifficulties;
 	Toggle[] toggles;

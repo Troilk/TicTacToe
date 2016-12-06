@@ -6,7 +6,7 @@ Assets/Sounds
 PluginsPackages
 *.keystore
 Tmp
-builds
+[Bb]uilds/
 *.orig
 ExportedObj
 obj

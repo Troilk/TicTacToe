@@ -2,23 +2,42 @@
 
 public static class PlayerProfile 
 {
+	public class IntGameStat
+	{
+		string storageKey;
+
+		public IntGameStat(string storageKey)
+		{
+			this.storageKey = storageKey;
+		}
+
+		public int GetValue(int difficulty)
+		{
+			return PlayerPrefs.GetInt(this.storageKey + difficulty, 0);
+		}
+
+		public void IncrementValue(int difficulty)
+		{
+			string key = this.storageKey + difficulty;
+			PlayerPrefs.SetInt(key, PlayerPrefs.GetInt(key, 0) + 1);
+			PlayerPrefs.Save();
+		}
+	}
+
 	const string PREFERRED_DIFFICULTY_KEY = "PreferredDifficulty";
 	public static int PreferredDifficulty { get; private set; }
 
-	const string WINS_KEY = "Wins";
-	const string LOSSES_KEY = "Losses";
-	const string DRAWS_KEY = "Draws";
-	public static int Wins { get; private set; }
-	public static int Losses { get; private set; }
-	public static int Draws { get; private set; }
+	public static IntGameStat Wins { get; private set; }
+	public static IntGameStat Losses { get; private set; }
+	public static IntGameStat Draws { get; private set; }
 
 	static PlayerProfile()
 	{
 		PreferredDifficulty = PlayerPrefs.GetInt(PREFERRED_DIFFICULTY_KEY, 0);
 
-		Wins = PlayerPrefs.GetInt(WINS_KEY, 0);
-		Losses = PlayerPrefs.GetInt(LOSSES_KEY, 0);
-		Draws = PlayerPrefs.GetInt(DRAWS_KEY, 0);
+		Wins = new IntGameStat("Wins");
+		Losses = new IntGameStat("Losses");
+		Draws = new IntGameStat("Draws");
 	}
 
 	static void SaveInt(string key, int value)
@@ -31,20 +50,5 @@ public static class PlayerProfile
 	{
 		PreferredDifficulty = value;
 		SaveInt(PREFERRED_DIFFICULTY_KEY, value);
-	}
-
-	public static void AddWin()
-	{
-		SaveInt(WINS_KEY, ++Wins);
-	}
-
-	public static void AddLoss()
-	{
-		SaveInt(LOSSES_KEY, ++Losses);
-	}
-
-	public static void AddDraw()
-	{
-		SaveInt(DRAWS_KEY, ++Draws);
 	}
 }

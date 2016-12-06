@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public interface IPageMainMenuHandlers
@@ -8,7 +9,8 @@ public interface IPageMainMenuHandlers
 
 public class MainMenuManager : MonoBehaviour 
 {
-	PageMainMenuHandlers pageMainMenuHandlers;
+	PageMainMenuView pageMainMenuHandlers;
+	PageLoadingHandlers pageLoadingHandlers;
 
 	void Awake()
 	{
@@ -21,8 +23,13 @@ public class MainMenuManager : MonoBehaviour
 		UIPage[] allPages = UIPage.GetAllPages(true);
 		UIPage.SetPagesActive(allPages, true);
 
-		this.pageMainMenuHandlers = FindObjectOfType<PageMainMenuHandlers>();
+		// Cache references to pages
+		this.pageMainMenuHandlers = FindObjectOfType<PageMainMenuView>();
+		this.pageLoadingHandlers = FindObjectOfType<PageLoadingHandlers>();
+
+		// Init pages
 		this.pageMainMenuHandlers.Init(PageType.Window);
+		this.pageLoadingHandlers.Init(PageType.Window);
 
 		// disable all pages
 		UIPage.SetPagesActive(allPages, false);
@@ -30,9 +37,20 @@ public class MainMenuManager : MonoBehaviour
 
 	void Start()
 	{
+		// Immidiately show black loading screen
+		this.pageLoadingHandlers.Open(null, true);
+		System.GC.Collect();
+		StartCoroutine(this.GetLoadingPageCloseRoutine());
+	}
+
+	IEnumerator GetLoadingPageCloseRoutine()
+	{
+		// Wait 1 frame
+		yield return null;
+
 		this.pageMainMenuHandlers.OnPlayPressed += this.OnPlayPressed;
 		this.pageMainMenuHandlers.SetSelectedDifficulty(PlayerProfile.PreferredDifficulty);
-		this.pageMainMenuHandlers.Open(null);
+		this.pageLoadingHandlers.Close(this.pageMainMenuHandlers);
 	}
 
 	void OnDestroy()
@@ -43,6 +61,7 @@ public class MainMenuManager : MonoBehaviour
 	void OnPlayPressed(int difficulty)
 	{
 		PlayerProfile.SetPreferredDifficulty(difficulty);
-		SceneManager.LoadScene(1);
+		this.pageLoadingHandlers.SceneToLoad = 1;
+		this.pageLoadingHandlers.Open(this.pageMainMenuHandlers);
 	}
 }

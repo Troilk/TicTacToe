@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public enum GameState
 {
@@ -41,8 +40,12 @@ public class GameManager : MonoBehaviour, IGameManager
 
 		// Creating Players
 		var userPlayer = new UserPlayer(gameBoard, TileState.Cross);
-		// TODO: use different AI player settings based on selected difficulty
-		var aiPlayer = new RandomAIPlayer(gameBoard, TileState.Circle);
+		// Use different AI player settings based on selected difficulty
+		AbstractPlayer aiPlayer;
+		if(PlayerProfile.PreferredDifficulty == 0)
+			aiPlayer = new RandomAIPlayer(gameBoard, TileState.Circle);
+		else
+			aiPlayer = new MinMaxAIPlayer(gameBoard, TileState.Circle, PlayerProfile.PreferredDifficulty == 1 ? 0.3f : 0.0f);
 
 		this.turnManager = new TurnManager(gameBoard, userPlayer, aiPlayer);
 
@@ -59,17 +62,21 @@ public class GameManager : MonoBehaviour, IGameManager
 	{
 		this.hudManager.OnHUDRequestGameStateTransition -= OnHUDRequestGameStateTransition;
 		this.turnManager.OnGameOver -= this.OnGameOver;
+
+		EventRelay.ResetEvents();
 	}
 
 	void OnGameOver(AbstractPlayer winner)
 	{
+		int difficulty = PlayerProfile.PreferredDifficulty;
+
 		// Update player stats
 		if(winner == null)
-			PlayerProfile.AddDraw();
+			PlayerProfile.Draws.IncrementValue(difficulty);
 		else if(winner is IUserControlledPlayer)
-			PlayerProfile.AddWin();
+			PlayerProfile.Wins.IncrementValue(difficulty);
 		else
-			PlayerProfile.AddLoss();
+			PlayerProfile.Losses.IncrementValue(difficulty);
 
 		this.ChangeGameState(GameState.GameOver, winner);
 	}
@@ -99,16 +106,12 @@ public class GameManager : MonoBehaviour, IGameManager
 			this.turnManager.OnGameOver += this.OnGameOver;
 			this.turnManager.Start();
 		}
-		else if(targetState == GameState.Loading)
-		{
-			SceneManager.LoadScene(0);
-		}
 		else
 		{
 			this.turnManager.OnGameOver -= this.OnGameOver;
 		}
 
-		Debug.LogFormat("<color=red>Game State changed to {0}</color>", this.GameState);
+		Debug.LogFormat("<color=green>Game State changed to {0}</color>", this.GameState);
 		if(this.OnGameStateChanged != null)
 			this.OnGameStateChanged(targetState, winner);
 	}

@@ -58,6 +58,7 @@ public class TurnManager
 #endif
 
 		this.currentPlayer.OnMoveCompleted += this.dOnMoveCompleted;
+		EventRelay.FireOnTurnStarted(this.currentPlayer);
 		this.currentPlayer.StartMove(previousMove);
 	}
 
