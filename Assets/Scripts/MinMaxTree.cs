@@ -2,12 +2,11 @@
 using System.Linq;
 using System.Collections.Generic;
 
-// TODO: implement more complex scoring system
 public class MinMaxTree 
 {
-	// TODO: do not use duplicate for struct that is defined in GameBoard
 	public class BoardState
 	{
+		int filledCount = 0;
 		int[] tiles = new int[9];
 		int[][] checkIdxs = new int[8][] {
 			new int[3] { 0, 1, 2 },
@@ -21,22 +20,20 @@ public class MinMaxTree
 			new int[3] { 0, 4, 8 },
 			new int[3] { 2, 4, 6 }
 		};
-		public int FilledCount { get; private set; }
-
+			
 		public int this[int idx] { get { return this.tiles[idx]; } }
 
 		public void SetTile(int idx, int type)
 		{
-			// TODO: check filled count
 			if(type == 0)
 			{
 				if(this.tiles[idx] > 0)
-					--this.FilledCount;
+					--this.filledCount;
 			}
 			else
 			{
 				if(this.tiles[idx] == 0)
-					++this.FilledCount;
+					++this.filledCount;
 			}
 
 			this.tiles[idx] = type;
@@ -59,7 +56,7 @@ public class MinMaxTree
 					return val0;
 			}
 
-			return this.FilledCount < 9 ? -1 : 0;
+			return this.filledCount < 9 ? -1 : 0;
 		}
 	}
 
@@ -115,7 +112,6 @@ public class MinMaxTree
 	}
 #endif
 		
-	// TODO: can reduce node count by not adding nodes corresponding to turn filling last tile
 	int AddChildren(MinMaxNode<int> node, BoardState state, int depth)
 	{
 		MinMaxNode<int>[] children = new MinMaxNode<int>[9 - depth];

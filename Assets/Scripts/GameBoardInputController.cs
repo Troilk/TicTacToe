@@ -1,18 +1,19 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-public class GameBoardInputController : GameBoard.IGameBoardInputController
+public class GameBoardInputController : IGameBoardInputController
 {
 	CanvasGroup tileButtonsRoot;
-	GameBoard.IGameBoardTileView[] tiles;
+	IGameBoardTileView[] tiles;
 
-	public event System.Action<GameBoard.IGameBoardTileView> OnTileClicked;
-	public bool Interactable { get { return this.tileButtonsRoot.interactable; } set { 
-			this.tileButtonsRoot.interactable = value; 
-		} 
+	public event System.Action<IGameBoardTileView> OnTileClicked;
+	public bool Interactable 
+	{ 
+		get { return this.tileButtonsRoot.interactable; }
+		set { this.tileButtonsRoot.interactable = value; }
 	}
 
-	public GameBoardInputController(CanvasGroup tileButtonsRoot, GameBoard.IGameBoardTileView[] tiles)
+	public GameBoardInputController(CanvasGroup tileButtonsRoot, IGameBoardTileView[] tiles)
 	{
 		this.tileButtonsRoot = tileButtonsRoot;
 		this.tiles = tiles;
@@ -34,7 +35,7 @@ public class GameBoardInputController : GameBoard.IGameBoardInputController
 			this.tiles[i].OnClicked -= this.OnTileClickedHandler;
 	}
 		
-	void OnTileClickedHandler(GameBoard.IGameBoardTileView tile)
+	void OnTileClickedHandler(IGameBoardTileView tile)
 	{
 		if(this.OnTileClicked != null)
 			this.OnTileClicked(tile);

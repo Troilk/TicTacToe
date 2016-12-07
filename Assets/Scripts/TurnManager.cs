@@ -15,7 +15,7 @@ public class TurnManager
 		}
 	}
 
-	GameBoard gameBoard;
+	GameBoardController gameBoard;
 	AbstractPlayer[] players;
 
 	int currentPlayerIdx = 0;
@@ -25,7 +25,7 @@ public class TurnManager
 
 	public event System.Action<AbstractPlayer> OnGameOver;
 
-	public TurnManager(GameBoard board, params AbstractPlayer[] players)
+	public TurnManager(GameBoardController board, params AbstractPlayer[] players)
 	{
 		this.gameBoard = board;
 		this.players = players;
@@ -41,9 +41,9 @@ public class TurnManager
 			this.currentPlayerIdx = (this.previousGameInfo.StartingPlayerIdx + 1) % this.players.Length;
 
 		this.previousGameInfo.StartingPlayerIdx = this.currentPlayerIdx;
-		// TODO: this is kind of dumb
+
 		for(int i = 0; i < this.players.Length; ++i)
-			this.players[i].PrepareForGame(i == this.currentPlayerIdx ? TileState.Cross : TileState.Circle);
+			this.players[i].PrepareForGame(i == this.currentPlayerIdx ? TileMark.Cross : TileMark.Circle);
 
 		this.StartNextTurn(null);
 	}
@@ -72,7 +72,7 @@ public class TurnManager
 			this.gameBoard.SetTileState(move.Row, move.Col, this.currentPlayer.Type);
 
 			// Check if game is over
-			TileState? winningType;
+			TileMark? winningType;
 			if(this.gameBoard.CheckGameOverCondition(out winningType))
 			{
 				// Winner could be only the player, who was making last turn
@@ -90,6 +90,6 @@ public class TurnManager
 
 	bool ValidateMove(PlayersMove move)
 	{
-		return this.gameBoard[move.Row, move.Col] == TileState.Empty;
+		return this.gameBoard[move.Row, move.Col] == TileMark.Empty;
 	}
 }

@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
 
 public class MinMaxNode<T> : System.IComparable<MinMaxNode<T>>
 {
-	// TODO: make children private and access them with methods
 	public T Data;
 	public int Score;
 	public MinMaxNode<T>[] Children;

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 [RequireComponent(typeof(Button)),
  DisallowMultipleComponent]
-public class GameBoardViewDefaultTile : MonoBehaviour, GameBoard.IGameBoardTileView
+public class GameBoardViewDefaultTile : MonoBehaviour, IGameBoardTileView
 {
 	[System.Serializable]
 	public struct TileStateProfile
@@ -30,7 +30,7 @@ public class GameBoardViewDefaultTile : MonoBehaviour, GameBoard.IGameBoardTileV
 	#region IGameBoardTileView implementation
 
 	public bool InputEnabled { get { return this.button.interactable; } set { this.button.interactable = value; } }
-	public event System.Action<GameBoard.IGameBoardTileView> OnClicked;
+	public event System.Action<IGameBoardTileView> OnClicked;
 
 	#endregion
 

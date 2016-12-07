@@ -2,18 +2,16 @@
 
 public class RandomAIPlayer : AbstractPlayer
 {
-	public RandomAIPlayer(GameBoard board, TileState playerType) 
+	public RandomAIPlayer(GameBoardController board, TileMark playerType) 
 		: base(board, playerType)
-	{
-		// TODO:
-	}
+	{}
 
 	public override void StartMove(PlayersMove? previousMove)
 	{
 		int row, col;
 		this.GetRandomCoords(out row, out col);
 
-		while(this.board[row, col] != TileState.Empty)
+		while(this.board[row, col] != TileMark.Empty)
 			this.GetRandomCoords(out row, out col);
 
 		this.FireOnMoveCompleted(new PlayersMove(row, col));

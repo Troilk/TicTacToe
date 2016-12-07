@@ -5,23 +5,23 @@ public interface IUserControlledPlayer
 
 public abstract class AbstractPlayer 
 {
-	protected GameBoard board;
+	protected GameBoardController board;
 
 	public event System.Action<PlayersMove> OnMoveCompleted;
-	public TileState Type { get; private set; }
+	public TileMark Type { get; private set; }
 
-	public AbstractPlayer(GameBoard board, TileState defaultType)
+	public AbstractPlayer(GameBoardController board, TileMark defaultType)
 	{
 		this.board = board;
 		this.PrepareForGame(defaultType);
 	}
 
-	public virtual void PrepareForGame(TileState playerType)
+	public virtual void PrepareForGame(TileMark playerType)
 	{
-		if(playerType == TileState.Empty)
+		if(playerType == TileMark.Empty)
 		{
 			Debug.LogError("Tried to set Player to Empty type");
-			this.Type = TileState.Cross;
+			this.Type = TileMark.Cross;
 			return;
 		}
 

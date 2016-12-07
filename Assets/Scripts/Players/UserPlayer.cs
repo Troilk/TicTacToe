@@ -2,26 +2,22 @@
 
 public class UserPlayer : AbstractPlayer, IUserControlledPlayer
 {
-	public UserPlayer(GameBoard board, TileState playerType) 
+	public UserPlayer(GameBoardController board, TileMark playerType) 
 		: base(board, playerType)
-	{
-		// TODO:
-	}
+	{}
 
 	public override void StartMove(PlayersMove? previousMove)
 	{
-		var input = this.board.InputController;
-
 		// Enable player input
-		// TODO: who should really be responsible for enabling/disabling view interactivity ?
+		var input = this.board.InputController;
 		input.Interactable = true;
 		input.OnTileClicked += this.OnTileClicked;
 	}
 
-	void OnTileClicked(GameBoard.IGameBoardTileView tile)
+	void OnTileClicked(IGameBoardTileView tile)
 	{
 		// ignore clicks on non-empty tiles
-		if(this.board[tile.Row, tile.Col] != TileState.Empty)
+		if(this.board[tile.Row, tile.Col] != TileMark.Empty)
 			return;
 
 		var input = this.board.InputController;

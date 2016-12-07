@@ -1,9 +1,10 @@
 ﻿using UnityEngine;
 
-[RequireComponent(typeof(Camera))]
+[RequireComponent(typeof(Camera)),
+ DisallowMultipleComponent]
 public class CameraSizeAdjuster : MonoBehaviour 
 {
-	[SerializeField] RectTransform targetTransform;
+	[SerializeField, NonNull] RectTransform targetTransform;
 	[SerializeField, Range(0.0f, 100.0f)] float widthPercent = 80.0f;
 	[SerializeField, Range(0.0f, 100.0f)] float maxHeightPercent = 70.0f;
 
