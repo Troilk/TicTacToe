@@ -7,9 +7,7 @@ public enum GameState
 	Gameplay,
 	GameOver
 }
-
-// TODO: does LINQ statements work on mobile devices
-// TODO: What should happen if we exit to menu - we reset turn info ??
+	
 public partial class GameManager : MonoBehaviour
 {
 	const int ROWS = 3;
