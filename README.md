@@ -1,4 +1,7 @@
 ## Simple *Tic-Tac-Toe* game implementation using Unity3D game engine.
+
+[WebGL build](https://troilk.github.io/TicTacToe/)
+
 Game consists of 2 scenes (Menu and Gameplay).
 In Menu scene you can select 1 of 3 difficulties.
 * On Impossible AI will use MinMax tree to find optimal move.
