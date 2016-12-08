@@ -3,7 +3,9 @@
 [DisallowMultipleComponent]
 public class HUDController : MonoBehaviour
 {
-	// Page View references
+	[SerializeField] SoundClip btnClickSfx;
+
+	[Header("Page views")]
 	[SerializeField, NonNull] PageGameplayView 	pageGameplayView;
 	[SerializeField, NonNull] PopupGameoverView popupGameoverView;
 	[SerializeField, NonNull] PageLoadingView 	pageLoadingView;
@@ -13,23 +15,23 @@ public class HUDController : MonoBehaviour
 	PopupGameoverController	popupGameoverController;
 	PageLoadingController 	pageLoadingController;
 
-	IGameManager gameManager;
-
 	public event System.Action<GameState> OnHUDRequestGameStateTransition;
 
-	public void Init(IGameManager gameManager)
+	public void Init()
 	{
 		if(FindObjectsOfType<HUDController>().Length > 1)
 		{
 			Debug.LogError("Multiple HUD managers found in scene", this);
 			Destroy(this);
 		}
-
-		this.gameManager = gameManager;
-		gameManager.OnGameStateChanged += this.OnGameStateChanged;
+			
 		EventRelay.OnTurnStarted += this.OnTurnStarted;
 
 		this.CreatePageControllers();
+
+		SFXHelpers.AddButtonBehaviours(this.pageGameplayView.gameObject, null, this.btnClickSfx, null, null);
+		SFXHelpers.AddButtonBehaviours(this.popupGameoverView.gameObject, null, this.btnClickSfx, null, null);
+		SFXHelpers.AddButtonBehaviours(this.pageLoadingView.gameObject, null, this.btnClickSfx, null, null);
 
 		this.pageLoadingController.OpenAndClose(this.pageGameplayController);
 	}
@@ -52,7 +54,7 @@ public class HUDController : MonoBehaviour
 		);
 	}
 
-	void OnGameStateChanged(GameState newState, AbstractPlayer winner)
+	public void ChangeGameState(GameState newState, AbstractPlayer winner)
 	{
 		this.UnsubsribeAllPagesEvents();
 		this.pageGameplayController.UpdateGameStats();
@@ -95,7 +97,6 @@ public class HUDController : MonoBehaviour
 	void OnDestroy()
 	{
 		this.UnsubsribeAllPagesEvents();
-		this.gameManager.OnGameStateChanged -= this.OnGameStateChanged;
 		EventRelay.OnTurnStarted -= this.OnTurnStarted;
 	}
 }

@@ -40,16 +40,20 @@ public class TurnManager
 		else
 			this.currentPlayerIdx = (this.previousGameInfo.StartingPlayerIdx + 1) % this.players.Length;
 
+		// Save starter player idx for next game
 		this.previousGameInfo.StartingPlayerIdx = this.currentPlayerIdx;
 
+		// Prepare players for game
 		for(int i = 0; i < this.players.Length; ++i)
 			this.players[i].PrepareForGame(i == this.currentPlayerIdx ? TileMark.Cross : TileMark.Circle);
 
+		// Start first turn
 		this.StartNextTurn(null);
 	}
 
 	void StartNextTurn(PlayersMove? previousMove)
 	{
+		// Update current player index, if it's not the first turn in game
 		if(previousMove != null)
 			this.currentPlayerIdx = (this.currentPlayerIdx + 1) % this.players.Length;
 
@@ -57,6 +61,7 @@ public class TurnManager
 		Debug.LogFormat("<color=blue>Starting player {0} move</color>", this.currentPlayerIdx);
 #endif
 
+		// Start player's move
 		this.currentPlayer.OnMoveCompleted += this.dOnMoveCompleted;
 		EventRelay.FireOnTurnStarted(this.currentPlayer);
 		this.currentPlayer.StartMove(previousMove);

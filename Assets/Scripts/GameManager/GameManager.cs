@@ -1,21 +1,16 @@
 ﻿using UnityEngine;
+using Prime31.StateKit;
 
 public enum GameState
 {
 	Loading = 0,
 	Gameplay,
-	GameOver,
-	GamePaused
-}
-
-public interface IGameManager
-{
-	event System.Action<GameState, AbstractPlayer> OnGameStateChanged;
+	GameOver
 }
 
 // TODO: does LINQ statements work on mobile devices
 // TODO: What should happen if we exit to menu - we reset turn info ??
-public class GameManager : MonoBehaviour, IGameManager
+public partial class GameManager : MonoBehaviour
 {
 	const int ROWS = 3;
 	const int COLS = 3;
@@ -23,11 +18,14 @@ public class GameManager : MonoBehaviour, IGameManager
 	[SerializeField, NonNull] GameBoardViewDefault boardView;
 	[SerializeField, NonNull] HUDController hudManager;
 
+	[Header("SFX")]
+	[SerializeField] SoundClip sfxVictory;
+	[SerializeField] SoundClip sfxDefeat;
+	[SerializeField] SoundClip sfxDraw;
+
 	GameBoardController gameBoard;
 	TurnManager turnManager;
-
-	public GameState GameState { get; private set; }
-	public event System.Action<GameState, AbstractPlayer> OnGameStateChanged;
+	SKStateMachine<GameManager> fsm;
 
 	void Awake()
 	{
@@ -44,71 +42,21 @@ public class GameManager : MonoBehaviour, IGameManager
 			aiPlayer = new MinMaxAIPlayer(gameBoard, TileMark.Circle, PlayerProfile.PreferredDifficulty == 1 ? 0.3f : 0.0f);
 
 		this.turnManager = new TurnManager(gameBoard, userPlayer, aiPlayer);
+		this.hudManager.Init();
 
-		this.hudManager.Init(this);
-		this.hudManager.OnHUDRequestGameStateTransition += this.OnHUDRequestGameStateTransition;
-	}
-
-	void Start()
-	{
-		this.ChangeGameState(GameState.Gameplay);
+		// Initializing State Machine
+		this.fsm = new SKStateMachine<GameManager>(this, new GameplayState());
+		this.fsm.addState(new GameoverState());
+		this.fsm.addState(new GameLoadingState());
+#if DEBUG
+		this.fsm.onStateChanged += () => {
+			Debug.LogFormat("<color=green>GameManager FSM state changed to {0}</color>", this.fsm.currentState);
+		};
+#endif
 	}
 
 	void OnDestroy()
 	{
-		this.hudManager.OnHUDRequestGameStateTransition -= OnHUDRequestGameStateTransition;
-		this.turnManager.OnGameOver -= this.OnGameOver;
-
 		EventRelay.ResetEvents();
-	}
-
-	void OnGameOver(AbstractPlayer winner)
-	{
-		int difficulty = PlayerProfile.PreferredDifficulty;
-
-		// Update player stats
-		if(winner == null)
-			PlayerProfile.Draws.IncrementValue(difficulty);
-		else if(winner is IUserControlledPlayer)
-			PlayerProfile.Wins.IncrementValue(difficulty);
-		else
-			PlayerProfile.Losses.IncrementValue(difficulty);
-
-		this.ChangeGameState(GameState.GameOver, winner);
-	}
-
-	void OnHUDRequestGameStateTransition(GameState targetState)
-	{
-		if(targetState == GameState.GameOver)
-		{
-			Debug.LogWarning("HUD is not allowed to transition game to GameOver state");
-			return;
-		}
-
-		this.ChangeGameState(targetState);
-	}
-
-	void ChangeGameState(GameState targetState, AbstractPlayer winner = null)
-	{
-		if(this.GameState == targetState)
-			return;
-
-		this.GameState = targetState;
-
-		if(targetState == GameState.Gameplay)
-		{
-			this.gameBoard.Clear();
-
-			this.turnManager.OnGameOver += this.OnGameOver;
-			this.turnManager.Start();
-		}
-		else
-		{
-			this.turnManager.OnGameOver -= this.OnGameOver;
-		}
-
-		Debug.LogFormat("<color=green>Game State changed to {0}</color>", this.GameState);
-		if(this.OnGameStateChanged != null)
-			this.OnGameStateChanged(targetState, winner);
 	}
 }

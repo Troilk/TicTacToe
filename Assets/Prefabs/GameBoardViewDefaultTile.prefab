@@ -23,7 +23,8 @@ GameObject:
   - 114: {fileID: 114000010988691456}
   - 114: {fileID: 114000011647096510}
   - 114: {fileID: 114000011270751188}
-  m_Layer: 5
+  - 114: {fileID: 114000014109857272}
+  m_Layer: 0
   m_Name: GameBoardViewDefaultTile
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -40,7 +41,7 @@ GameObject:
   - 224: {fileID: 224000011176978886}
   - 222: {fileID: 222000010387483038}
   - 114: {fileID: 114000011259941486}
-  m_Layer: 5
+  m_Layer: 0
   m_Name: ImageTileState
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -154,6 +155,29 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
+--- !u!114 &114000014109857272
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000011779654336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7669c7c7152e14292a5d034873ca4b11, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  PressedSound:
+    clip: {fileID: 0}
+    volumeScale: 1
+  ReleasedSound:
+    clip: {fileID: 0}
+    volumeScale: 1
+  PressedSoundDisabled:
+    clip: {fileID: 0}
+    volumeScale: 1
+  ReleasedSoundDisabled:
+    clip: {fileID: 8300000, guid: f8323f231ec604310b99b83c8b14a263, type: 3}
+    volumeScale: 0.3
 --- !u!222 &222000010387483038
 CanvasRenderer:
   m_ObjectHideFlags: 1

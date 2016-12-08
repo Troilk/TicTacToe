@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 
 public class MainMenuController : MonoBehaviour 
 {
+	[SerializeField] SoundClip btnClickSfx;
+
+	[Header("Page views")]
 	[SerializeField, NonNull] PageMainMenuView pageMainMenuView;
 	[SerializeField, NonNull] PageLoadingView pageLoadingView;
 
@@ -26,6 +30,9 @@ public class MainMenuController : MonoBehaviour
 			new PageLoadingModel(PageType.Window),
 			this.pageLoadingView
 		);
+
+		SFXHelpers.AddButtonBehaviours(this.pageMainMenuView.gameObject, null, this.btnClickSfx, null, null);
+		SFXHelpers.AddButtonBehaviours(this.pageLoadingView.gameObject, null, this.btnClickSfx, null, null);
 	}
 
 	void Start()

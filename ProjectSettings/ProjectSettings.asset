@@ -9,7 +9,7 @@ PlayerSettings:
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
-  accelerometerFrequency: 60
+  accelerometerFrequency: 0
   companyName: DefaultCompany
   productName: TicTacToe
   defaultCursor: {fileID: 0}
@@ -19,8 +19,8 @@ PlayerSettings:
   m_VirtualRealitySplashScreen: {fileID: 0}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
-  defaultScreenWidthWeb: 720
-  defaultScreenHeightWeb: 1280
+  defaultScreenWidthWeb: 432
+  defaultScreenHeightWeb: 768
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
   m_ActiveColorSpace: 0
@@ -94,7 +94,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleIdentifier: com.Company.ProductName
+  bundleIdentifier: com.troilk.TicTacToe
   bundleVersion: 1.0
   preloadedAssets: []
   metroEnableIndependentInputSource: 0
@@ -108,7 +108,7 @@ PlayerSettings:
   apiCompatibilityLevel: 2
   stripEngineCode: 1
   iPhoneStrippingLevel: 0
-  iPhoneScriptCallOptimization: 0
+  iPhoneScriptCallOptimization: 1
   iPhoneBuildNumber: 0
   ForceInternetPermission: 0
   ForceSDCardPermission: 0

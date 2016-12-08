@@ -55,8 +55,8 @@ namespace Prime31.StateKit
 		{}
 		
 		
-		public abstract void update( float deltaTime );
-		
+		public virtual void update( float deltaTime )
+		{}
 		
 		public virtual void end()
 		{}
